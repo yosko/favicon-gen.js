@@ -1,6 +1,8 @@
 pages:
   stage: deploy
   environment: production
+  script:
+    - echo "No build step necessary"
   artifacts:
     paths:
       - src
