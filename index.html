@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>favicon-gen.js</title>
+    <link rel="icon" href="favicon.png" />
+    <script type="module" src="main.js"></script>
+    <style>
+        html, body { font-family: sans-serif; }
+        div{ margin: .5em 0; }
+        input:not([type=checkbox]) { width: 4em; text-align: center;  }
+        input:not([type=checkbox]), select { height: 20px; }
+        input[type='color'] { vertical-align: middle; height: 14px; box-sizing: content-box; }
+        canvas { border: 1em solid gray; }
+        #unicodeSelect { text-align: center; }
+        #unicodeSelect option { font-size: 1.5em; }
+        #unicodeSelect, #unicodeSelect option, #unicodeSelect optgroup {
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        #canvasContainer {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+        }
+        #canvasContainer div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1em;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div id="emojiDisplay"></div> -->
+    <h1>JavaScript Favicon Generator - <code>favicon-gen.js</code></h1>
+    
+    <div><label>Background Color <input type="color" id="bgColor" value="#f7df1e"></label></div>
+    <div>
+        <label>Text (max 3 chars) <input type="text" id="textInput" maxlength="3" value="fav"></label>
+        <input type="color" id="textColor" value="#000000">
+        <select id="fontSelect"></select>
+        <input type="number" id="fontSize" value="12"> px
+        <label><input type="checkbox" id="boldBox" checked> <strong>Bold</strong></label>
+        <label><input type="checkbox" id="italicBox" checked> <em>Italic</em></label>
+    </div>
+    <div>
+        <label>Or a Unicode Icon <select id="unicodeRangeSelect">
+            <option value=""></option>
+        </select></label>
+        <select id="unicodeSelect">
+            <option value=""></option>
+        </select>
+        (see also <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters">Unicode characters</a> or <a href="https://en.wikipedia.org/wiki/Emoji#Unicode_blocks">Emojis</a> on Wikipedia)
+    </div>
+    <div><label>Offset
+        X=<input type="number" id="offsetX" value="0" min="-8" max="8">
+        Y=<input type="number" id="offsetY" value="1" min="-8" max="8">
+    </label></div>
+    
+    <h2>Favicon Preview (original size & zoomed)</h2>
+    <div id="canvasContainer">
+        <div>
+            <canvas id="faviconCanvas" width="16" height="16"></canvas>
+            <button id="downloadBtn">Download Favicon</button>
+        </div>
+        <canvas id="zoomedCanvas" width="128" height="128"></canvas>
+    </div>
+</body>
+</html>
