@@ -1,7 +1,7 @@
-// Importation des paramètres
+// Import settings
 import { availableFonts, defaultFileName, availableUnicodeRanges } from './config.js';
 
-// Obtenir les éléments HTML
+// Get HTML elements
 const bgColorInput = document.getElementById('bgColor');
 const textColorInput = document.getElementById('textColor');
 const textInput = document.getElementById('textInput');
@@ -17,7 +17,7 @@ const unicodeSelect = document.getElementById('unicodeSelect');
 const boldBox = document.getElementById('boldBox');
 const italicBox = document.getElementById('italicBox');
 
-// Initialisation de la liste des polices
+// Initialize font list
 function initFonts() {
     availableFonts.forEach(font => {
         const option = document.createElement('option');
@@ -27,7 +27,7 @@ function initFonts() {
     });
 }
 
-// Initialisation de la liste des plages de caractères Unicode
+// Initialize Unicode range list
 function initUnicodeRanges() {
     for (let i in availableUnicodeRanges) {
         const range = availableUnicodeRanges[i];
@@ -38,15 +38,15 @@ function initUnicodeRanges() {
     }
 }
 
-// Conversion d'une valeur hexadécimale en caractère Unicode
+// Convert hexa value to Unicode character
 function hexToUnicode(hex) {
     return String.fromCodePoint(parseInt(hex, 16));
 }
 
-// Remplir la liste de caractères Unicode
+// Fill Unicode characters list
 function populateUnicodeSelect(startHex, endHex) {
 
-    // première option vide
+    // First option is empty
     const emptyOption = document.createElement('option');
     unicodeSelect.appendChild(emptyOption);
 
@@ -60,9 +60,9 @@ function populateUnicodeSelect(startHex, endHex) {
     }
 }
 
-// Détection du choix d'une plage de caractères Unicode
+// Detect Unicode range choice
 function applySelectedUnicodeRange(event) {
-    // réinitialiser la liste
+    // Reset the characters list
     // unicodeSelect.options.length = 0;
     unicodeSelect.innerHTML = '';
 
@@ -75,19 +75,19 @@ function applySelectedUnicodeRange(event) {
     unicodeSelect.dispatchEvent(new Event('change'));
 }
 
-// Dessiner le favicon
+// Draw the favicon
 function drawFavicon() {
     const faviconCtx = faviconCanvas.getContext('2d');
     const zoomedCtx = zoomedCanvas.getContext('2d');
 
-    // Effacer les canvas
+    // Clear both canvas
     faviconCtx.clearRect(0, 0, faviconCanvas.width, faviconCanvas.height);
 
-    // Appliquer la couleur de fond
+    // Apply background color
     faviconCtx.fillStyle = bgColorInput.value;
     faviconCtx.fillRect(0, 0, faviconCanvas.width, faviconCanvas.height);
 
-    // Configurer le texte
+    // Configure text
     const textColor = textColorInput.value;
     const text = unicodeSelect.value ? hexToUnicode(unicodeSelect.value) : textInput.value;
     const font = unicodeSelect.value ? 'sans-serif' : fontSelect.value;
@@ -95,7 +95,7 @@ function drawFavicon() {
     const offsetX = parseInt(offsetXInput.value, 10);
     const offsetY = parseInt(offsetYInput.value, 10);
     
-    // Appliquer les options de style de police
+    // Apply font style options
     let fontStyle = '';
     if (!unicodeSelect.value) {
         if (boldBox.checked) fontStyle += 'bold ';
@@ -107,19 +107,19 @@ function drawFavicon() {
     faviconCtx.textAlign = 'center';
     faviconCtx.textBaseline = 'middle';
 
-    // Dessiner le texte
+    // Draw the text
     const centerX = faviconCanvas.width / 2 + offsetX;
     const centerY = faviconCanvas.height / 2 + offsetY;
     faviconCtx.fillText(text, centerX, centerY);
 
-    // Copier l'image sur le canvas zoomé
+    // Copy image onto the zoomed canvas
     zoomedCtx.imageSmoothingEnabled = false;
     zoomedCtx.drawImage(faviconCanvas, 0, 0, zoomedCanvas.width, zoomedCanvas.height);
 }
 
-// Initialisation des évènements
+// Initialize events
 function setupEventListeners() {
-    // Mettre à jour le dessin en temps réel
+    // Update drawings in real time
     bgColorInput.addEventListener('input', drawFavicon);
     textColorInput.addEventListener('input', drawFavicon);
     textInput.addEventListener('input', drawFavicon);
@@ -131,14 +131,14 @@ function setupEventListeners() {
     boldBox.addEventListener('change', drawFavicon);
     italicBox.addEventListener('change', drawFavicon);
 
-    // Mettre à jour la liste des Emojis
+    // Update list of Emojis
     unicodeRangeSelect.addEventListener('change', applySelectedUnicodeRange);
 
-    // Télécharger l'image
+    // Download image
     downloadBtn.addEventListener('click', downloadFavicon);
 }
 
-// Fonction pour télécharger le favicon en PNG
+// Download favicon in PNG format
 function downloadFavicon() {
     const link = document.createElement('a');
     link.download = defaultFileName;
@@ -149,4 +149,4 @@ function downloadFavicon() {
 initFonts();
 initUnicodeRanges();
 setupEventListeners();
-drawFavicon(); // Dessin initial
+drawFavicon(); // Initial drawing

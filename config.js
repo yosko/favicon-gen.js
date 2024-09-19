@@ -1,6 +1,4 @@
-// Fichier config.js
-
-// Liste des polices disponibles
+// List of available fonts
 export const availableFonts = [
     'Arial',
     'Courier New',
@@ -9,13 +7,13 @@ export const availableFonts = [
     'Verdana',
     'Georgia',
     'Trebuchet MS',
-    'Comic Sans MS' // Ajout d'exemples de polices web classiques
+    'Comic Sans MS'
 ];
 
-// Nom de fichier par défaut pour le téléchargement
+// Default file name when downloading
 export const defaultFileName = 'favicon.png';
 
-// Caractères Unicode proposés (à la place du texte)
+// Suggested Unicode characters (replaces the text)
 export const availableUnicodeRanges = [
     {name: 'Emojis & Emotions', from: '1F600', to: '1F64F'},
     {name: 'People & Body', from: '1F466', to: '1F487'},
@@ -31,7 +29,4 @@ export const availableUnicodeRanges = [
     
     {name: 'Miscellaneous Symbols', from: '2600', to: '26FF'},
     {name: 'Dingbats', from: '2700', to: '27BF'},
-
-    // {name: 'Transport & Places Emojis', from: '1F680', to: '1F6FF'},
-    // {name: 'Games Symbols', from: '1F000', to: '1F02F'},
 ];
