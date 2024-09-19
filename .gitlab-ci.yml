@@ -2,9 +2,10 @@ pages:
   stage: deploy
   environment: production
   script:
-    - echo "No build step necessary"
+    - rm -rf public
+    - cp -r src public
   artifacts:
     paths:
-      - src
+      - public
   only:
     - main
