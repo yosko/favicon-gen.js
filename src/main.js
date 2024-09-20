@@ -16,6 +16,10 @@ const unicodeRangeSelect = document.getElementById('unicodeRangeSelect');
 const unicodeSelect = document.getElementById('unicodeSelect');
 const boldBox = document.getElementById('boldBox');
 const italicBox = document.getElementById('italicBox');
+const opacityRange = document.getElementById('opacityRange');
+const shadowRange = document.getElementById('shadowRange');
+const shadowColorInput = document.getElementById('shadowColor');
+
 
 // Initialize font list
 function initFonts() {
@@ -80,14 +84,29 @@ function drawFavicon() {
     const faviconCtx = faviconCanvas.getContext('2d');
     const zoomedCtx = zoomedCanvas.getContext('2d');
 
-    // Clear both canvas
+    // Clear canvas
     faviconCtx.clearRect(0, 0, faviconCanvas.width, faviconCanvas.height);
 
     // Apply background color
+    faviconCtx.globalAlpha = opacityRange.value / 100;
     faviconCtx.fillStyle = bgColorInput.value;
     faviconCtx.fillRect(0, 0, faviconCanvas.width, faviconCanvas.height);
 
+    // Appliquer une ombre radiale
+    const shadowStrength = shadowRange.value / 100;
+    const shadowColor = shadowColorInput.value;
+
+    const radius = faviconCanvas.width / 2;
+    const gradient = faviconCtx.createRadialGradient(radius, radius, 0, radius, radius, radius * 1.5);
+    gradient.addColorStop(0, `rgba(0, 0, 0, 0)`);
+    gradient.addColorStop(.5, `rgba(0, 0, 0, 0)`);
+    gradient.addColorStop(1, `rgba(${parseInt(shadowColor.slice(1, 3), 16)}, ${parseInt(shadowColor.slice(3, 5), 16)}, ${parseInt(shadowColor.slice(5, 7), 16)}, ${shadowStrength})`);
+
+    faviconCtx.fillStyle = gradient;
+    faviconCtx.fillRect(0, 0, faviconCanvas.width, faviconCanvas.height);
+
     // Configure text
+    faviconCtx.globalAlpha = 1;
     const textColor = textColorInput.value;
     const text = unicodeSelect.value ? hexToUnicode(unicodeSelect.value) : textInput.value;
     const font = unicodeSelect.value ? 'sans-serif' : fontSelect.value;
@@ -113,6 +132,7 @@ function drawFavicon() {
     faviconCtx.fillText(text, centerX, centerY);
 
     // Copy image onto the zoomed canvas
+    zoomedCtx.clearRect(0, 0, zoomedCanvas.width, zoomedCanvas.height);
     zoomedCtx.imageSmoothingEnabled = false;
     zoomedCtx.drawImage(faviconCanvas, 0, 0, zoomedCanvas.width, zoomedCanvas.height);
 }
@@ -130,6 +150,10 @@ function setupEventListeners() {
     unicodeSelect.addEventListener('change', drawFavicon);
     boldBox.addEventListener('change', drawFavicon);
     italicBox.addEventListener('change', drawFavicon);
+    opacityRange.addEventListener('input', drawFavicon);
+    shadowRange.addEventListener('input', drawFavicon);
+    shadowColorInput.addEventListener('input', drawFavicon);
+
 
     // Update list of Emojis
     unicodeRangeSelect.addEventListener('change', applySelectedUnicodeRange);

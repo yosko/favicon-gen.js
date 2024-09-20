@@ -10,6 +10,8 @@ Demo:
 ## Available options
 - background:
     - color
+    - opacity
+    - shadow/gradient (radial and colored)
 - text:
     - font (configurable list)
     - color
@@ -22,5 +24,5 @@ Demo:
 
 ## Future
 A small, non-exhaustive and non-binding list of features to add:
-- background : transparent, shadow, gradient (linear, radial, etc.)
+- background : other shadow geometries (linear, etc.)
 - unicode selection: replace dropdown list with a more user friendly list.
