@@ -44,6 +44,24 @@ function initUnicodeRanges() {
     }
 }
 
+// Initialize checkerbord background to better visualize transparency
+function initCheckerboard(canvas, size) {
+    const ctx = canvas.getContext('2d');
+    const squareSize = Math.max(size / 8, 4); // Ajuster le nombre de carrés
+
+    // Redimensionner le canvas de fond à la taille du canvas de dessin
+    canvas.width = size;
+    canvas.height = size;
+
+    // Dessiner le fond quadrillé
+    for (let y = 0; y < canvas.height; y += squareSize) {
+        for (let x = 0; x < canvas.width; x += squareSize) {
+            ctx.fillStyle = ((x / squareSize + y / squareSize) % 2 == 0) ? '#ddd' : '#fff';
+            ctx.fillRect(x, y, squareSize, squareSize);
+        }
+    }
+}
+
 // Convert hexa value to Unicode character
 function hexToUnicode(hex) {
     return String.fromCodePoint(parseInt(hex, 16));
@@ -84,7 +102,6 @@ function applySelectedUnicodeRange(event) {
 // Draw the favicon
 function drawFavicon() {
     const faviconCtx = faviconCanvas.getContext('2d');
-    const zoomedCtx = zoomedCanvas.getContext('2d');
 
     // Clear canvas
     faviconCtx.clearRect(0, 0, faviconCanvas.width, faviconCanvas.height);
@@ -132,46 +149,43 @@ function drawFavicon() {
     const centerX = faviconCanvas.width / 2 + offsetX;
     const centerY = faviconCanvas.height / 2 + offsetY;
     faviconCtx.fillText(text, centerX, centerY);
+}
 
+function drawZoomedFavicon() {
     // Copy image onto the zoomed canvas
+    const zoomedCtx = zoomedCanvas.getContext('2d');
     zoomedCtx.clearRect(0, 0, zoomedCanvas.width, zoomedCanvas.height);
     zoomedCtx.imageSmoothingEnabled = false;
     zoomedCtx.drawImage(faviconCanvas, 0, 0, zoomedCanvas.width, zoomedCanvas.height);
 }
 
-function drawCheckerboard(canvas, size) {
-    const ctx = canvas.getContext('2d');
-    const squareSize = Math.max(size / 8, 4); // Ajuster le nombre de carrés
+function updatePageFavicon() {
+    let faviconLink = document.querySelector('link[rel="icon"]');
+    faviconLink.href = faviconCanvas.toDataURL('image/png');
+}
 
-    // Redimensionner le canvas de fond à la taille du canvas de dessin
-    canvas.width = size;
-    canvas.height = size;
-
-    // Dessiner le fond quadrillé
-    for (let y = 0; y < canvas.height; y += squareSize) {
-        for (let x = 0; x < canvas.width; x += squareSize) {
-            ctx.fillStyle = ((x / squareSize + y / squareSize) % 2 == 0) ? '#ddd' : '#fff';
-            ctx.fillRect(x, y, squareSize, squareSize);
-        }
-    }
+function refresh() {
+    drawFavicon();
+    drawZoomedFavicon();
+    updatePageFavicon();
 }
 
 // Initialize events
 function setupEventListeners() {
     // Update drawings in real time
-    bgColorInput.addEventListener('input', drawFavicon);
-    textColorInput.addEventListener('input', drawFavicon);
-    textInput.addEventListener('input', drawFavicon);
-    fontSizeInput.addEventListener('input', drawFavicon);
-    fontSelect.addEventListener('change', drawFavicon);
-    offsetXInput.addEventListener('input', drawFavicon);
-    offsetYInput.addEventListener('input', drawFavicon);
-    unicodeSelect.addEventListener('change', drawFavicon);
-    boldBox.addEventListener('change', drawFavicon);
-    italicBox.addEventListener('change', drawFavicon);
-    opacityRange.addEventListener('input', drawFavicon);
-    shadowRange.addEventListener('input', drawFavicon);
-    shadowColorInput.addEventListener('input', drawFavicon);
+    bgColorInput.addEventListener('input', refresh);
+    textColorInput.addEventListener('input', refresh);
+    textInput.addEventListener('input', refresh);
+    fontSizeInput.addEventListener('input', refresh);
+    fontSelect.addEventListener('change', refresh);
+    offsetXInput.addEventListener('input', refresh);
+    offsetYInput.addEventListener('input', refresh);
+    unicodeSelect.addEventListener('change', refresh);
+    boldBox.addEventListener('change', refresh);
+    italicBox.addEventListener('change', refresh);
+    opacityRange.addEventListener('input', refresh);
+    shadowRange.addEventListener('input', refresh);
+    shadowColorInput.addEventListener('input', refresh);
 
 
     // Update list of Emojis
@@ -191,7 +205,7 @@ function downloadFavicon() {
 
 initFonts();
 initUnicodeRanges();
+initCheckerboard(bgCanvas, faviconCanvas.width);
+initCheckerboard(bgZoomedCanvas, zoomedCanvas.width);
 setupEventListeners();
-drawFavicon(); // Initial drawing
-drawCheckerboard(bgCanvas, faviconCanvas.width);
-drawCheckerboard(bgZoomedCanvas, zoomedCanvas.width);
+refresh(); // Initial drawing
