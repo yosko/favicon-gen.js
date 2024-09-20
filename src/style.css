@@ -1,0 +1,31 @@
+html, body { font-family: sans-serif; background-color: lightgrey; }
+div {
+    margin: .5em 0;
+}
+div, label {
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    gap: .5em;
+}
+input:not([type=checkbox], [type=range]) { width: 4em; text-align: center;  }
+input:not([type=checkbox], [type=range]), select { height: 20px; }
+input[type=range] { margin-right: 1em; }
+input[type='color'] { vertical-align: middle; height: 14px; box-sizing: content-box; }
+canvas { border: 1em solid gray; }
+#unicodeSelect { text-align: center; }
+#unicodeSelect option { font-size: 1.5em; }
+#unicodeSelect, #unicodeSelect option, #unicodeSelect optgroup {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+#canvasContainer {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+#canvasContainer div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}

@@ -6,42 +6,9 @@
     <title>favicon-gen.js</title>
     <link rel="icon" href="favicon.png" />
     <script type="module" src="main.js"></script>
-    <style>
-        html, body { font-family: sans-serif; }
-        div {
-            margin: .5em 0;
-        }
-        div, label {
-            display: flex;
-            flex-direction:row;
-            align-items: center;
-            gap: .5em;
-        }
-        input:not([type=checkbox], [type=range]) { width: 4em; text-align: center;  }
-        input:not([type=checkbox], [type=range]), select { height: 20px; }
-        input[type=range] { margin-right: 1em; }
-        input[type='color'] { vertical-align: middle; height: 14px; box-sizing: content-box; }
-        canvas { border: 1em solid gray; }
-        #unicodeSelect { text-align: center; }
-        #unicodeSelect option { font-size: 1.5em; }
-        #unicodeSelect, #unicodeSelect option, #unicodeSelect optgroup {
-            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        }
-        #canvasContainer {
-            display: flex;
-            align-items: center;
-            gap: 1em;
-        }
-        #canvasContainer div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1em;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- <div id="emojiDisplay"></div> -->
     <h1>JavaScript Favicon Generator - <code>favicon-gen.js</code></h1>
     
     <div>
