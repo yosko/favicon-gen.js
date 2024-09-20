@@ -42,10 +42,14 @@
     <h2>Favicon Preview (original size & zoomed)</h2>
     <div id="canvasContainer">
         <div>
+            <canvas id="bgCanvas"></canvas>
             <canvas id="faviconCanvas" width="16" height="16"></canvas>
             <button id="downloadBtn">Download Favicon</button>
         </div>
-        <canvas id="zoomedCanvas" width="128" height="128"></canvas>
+        <div>
+            <canvas id="bgZoomedCanvas"></canvas>
+            <canvas id="zoomedCanvas" width="128" height="128"></canvas>
+        </div>
     </div>
 </body>
 </html>

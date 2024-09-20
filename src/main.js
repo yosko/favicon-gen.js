@@ -19,6 +19,8 @@ const italicBox = document.getElementById('italicBox');
 const opacityRange = document.getElementById('opacityRange');
 const shadowRange = document.getElementById('shadowRange');
 const shadowColorInput = document.getElementById('shadowColor');
+const bgCanvas = document.getElementById('bgCanvas');
+const bgZoomedCanvas = document.getElementById('bgZoomedCanvas');
 
 
 // Initialize font list
@@ -137,6 +139,23 @@ function drawFavicon() {
     zoomedCtx.drawImage(faviconCanvas, 0, 0, zoomedCanvas.width, zoomedCanvas.height);
 }
 
+function drawCheckerboard(canvas, size) {
+    const ctx = canvas.getContext('2d');
+    const squareSize = Math.max(size / 8, 4); // Ajuster le nombre de carrés
+
+    // Redimensionner le canvas de fond à la taille du canvas de dessin
+    canvas.width = size;
+    canvas.height = size;
+
+    // Dessiner le fond quadrillé
+    for (let y = 0; y < canvas.height; y += squareSize) {
+        for (let x = 0; x < canvas.width; x += squareSize) {
+            ctx.fillStyle = ((x / squareSize + y / squareSize) % 2 == 0) ? '#ddd' : '#fff';
+            ctx.fillRect(x, y, squareSize, squareSize);
+        }
+    }
+}
+
 // Initialize events
 function setupEventListeners() {
     // Update drawings in real time
@@ -174,3 +193,5 @@ initFonts();
 initUnicodeRanges();
 setupEventListeners();
 drawFavicon(); // Initial drawing
+drawCheckerboard(bgCanvas, faviconCanvas.width);
+drawCheckerboard(bgZoomedCanvas, zoomedCanvas.width);

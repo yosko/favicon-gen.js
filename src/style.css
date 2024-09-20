@@ -12,20 +12,30 @@ input:not([type=checkbox], [type=range]) { width: 4em; text-align: center;  }
 input:not([type=checkbox], [type=range]), select { height: 20px; }
 input[type=range] { margin-right: 1em; }
 input[type='color'] { vertical-align: middle; height: 14px; box-sizing: content-box; }
-canvas { border: 1em solid gray; }
+canvas { border: 1em solid gray; position: absolute; }
 #unicodeSelect { text-align: center; }
 #unicodeSelect option { font-size: 1.5em; }
 #unicodeSelect, #unicodeSelect option, #unicodeSelect optgroup {
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+h2 { margin-bottom: .5em;}
 #canvasContainer {
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 1em;
+    gap: 11px;
 }
 #canvasContainer div {
+    margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1em;
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+#downloadBtn {
+    position: absolute;
+    bottom: 0;
 }
