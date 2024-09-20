@@ -5,7 +5,7 @@ Simple and lightweight favicon generator made in JavaScript.
 Demo:
 
 - [Gitlab Pages on Framagit](https://yosko.frama.io/favicon-gen.js)
-- [Github Pages](https://yosko.github.io/favicon-gen.js/)
+- [Github Pages](https://yosko.github.io/favicon-gen.js/src/)
 
 ## Available options
 - background:
