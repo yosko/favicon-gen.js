@@ -14,6 +14,7 @@ const zoomedCanvas = document.getElementById('zoomedCanvas');
 const downloadBtn = document.getElementById('downloadBtn');
 const unicodeRangeSelect = document.getElementById('unicodeRangeSelect');
 const unicodeSelect = document.getElementById('unicodeSelect');
+const unicodeIcon = document.getElementById('unicodeIcon');
 const boldBox = document.getElementById('boldBox');
 const italicBox = document.getElementById('italicBox');
 const opacityRange = document.getElementById('opacityRange');
@@ -31,17 +32,6 @@ function initFonts() {
         option.text = font;
         fontSelect.appendChild(option);
     });
-}
-
-// Initialize Unicode range list
-function initUnicodeRanges() {
-    for (let i in availableUnicodeRanges) {
-        const range = availableUnicodeRanges[i];
-        const option = document.createElement('option');
-        option.value = i;
-        option.text = range.name;
-        unicodeRangeSelect.appendChild(option);
-    }
 }
 
 // Initialize checkerbord background to better visualize transparency
@@ -62,25 +52,44 @@ function initCheckerboard(canvas, size) {
     }
 }
 
-// Convert hexa value to Unicode character
-function hexToUnicode(hex) {
-    return String.fromCodePoint(parseInt(hex, 16));
+// Initialize Unicode range list
+function initUnicodeRanges() {
+    for (let i in availableUnicodeRanges) {
+        const range = availableUnicodeRanges[i];
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = range.name;
+        unicodeRangeSelect.appendChild(option);
+    }
+}
+
+function appendCharToSelect(select, character, text = '') {
+    const option = document.createElement('option');
+    option.value = character;
+    option.text = character;
+    if (text)
+        option.text = option.text+' '+text;
+    select.appendChild(option);
 }
 
 // Fill Unicode characters list
-function populateUnicodeSelect(startHex, endHex) {
+function populateUnicodeSelect(range) {
 
     // First option is empty
     const emptyOption = document.createElement('option');
     unicodeSelect.appendChild(emptyOption);
 
-    for (let hex = parseInt(startHex, 16); hex <= parseInt(endHex, 16); hex++) {
-        const hexaCode = hex.toString(16).toUpperCase().padStart(4, '0');
-        const character = hexToUnicode(hexaCode);
-        const option = document.createElement('option');
-        option.value = hexaCode;
-        option.text = character;
-        unicodeSelect.appendChild(option);
+    if (range.hasOwnProperty('list')) {
+        for (let item of range.list) {
+            const character = item.codes.map(code => String.fromCodePoint(code)).join('');
+            // console.log(item.codes, character);
+            appendCharToSelect(unicodeSelect, character, item.text);
+        }
+    } else {
+        for (let value = range.from; value <= range.to; value++) {
+            const character = String.fromCodePoint(value);
+            appendCharToSelect(unicodeSelect, character);
+        }
     }
 }
 
@@ -93,7 +102,7 @@ function applySelectedUnicodeRange(event) {
     const i = event.target.value;
     if (i !== '') {
         const range = availableUnicodeRanges[i];
-        populateUnicodeSelect(range.from, range.to);
+        populateUnicodeSelect(range);
     }
     
     unicodeSelect.dispatchEvent(new Event('change'));
@@ -127,7 +136,7 @@ function drawFavicon() {
     // Configure text
     faviconCtx.globalAlpha = 1;
     const textColor = textColorInput.value;
-    const text = unicodeSelect.value ? hexToUnicode(unicodeSelect.value) : textInput.value;
+    const text = unicodeSelect.value ? unicodeSelect.value : textInput.value;
     const font = unicodeSelect.value ? 'sans-serif' : fontSelect.value;
     const fontSize = parseInt(fontSizeInput.value, 10);
     const offsetX = parseInt(offsetXInput.value, 10);
@@ -165,6 +174,7 @@ function updatePageFavicon() {
 }
 
 function refresh() {
+    unicodeIcon.value = unicodeSelect.value;
     drawFavicon();
     drawZoomedFavicon();
     updatePageFavicon();
