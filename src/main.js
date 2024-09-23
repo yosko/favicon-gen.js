@@ -2,26 +2,12 @@
 import { availableFonts, defaultFileName, availableUnicodeRanges } from './config.js';
 
 // Get HTML elements
-const bgColorInput = document.getElementById('bgColor');
-const textColorInput = document.getElementById('textColor');
-const textInput = document.getElementById('textInput');
-const fontSizeInput = document.getElementById('fontSize');
-const fontSelect = document.getElementById('fontSelect');
-const offsetXInput = document.getElementById('offsetX');
-const offsetYInput = document.getElementById('offsetY');
-const faviconCanvas = document.getElementById('faviconCanvas');
-const zoomedCanvas = document.getElementById('zoomedCanvas');
-const downloadBtn = document.getElementById('downloadBtn');
-const unicodeRangeSelect = document.getElementById('unicodeRangeSelect');
-const unicodeSelect = document.getElementById('unicodeSelect');
-const unicodeIcon = document.getElementById('unicodeIcon');
-const boldBox = document.getElementById('boldBox');
-const italicBox = document.getElementById('italicBox');
-const opacityRange = document.getElementById('opacityRange');
-const shadowRange = document.getElementById('shadowRange');
-const shadowColorInput = document.getElementById('shadowColor');
+const form = document.getElementById('favForm');
+const unicodeRadioButtons = document.getElementById('unicodeRadioButtons');
 const bgCanvas = document.getElementById('bgCanvas');
 const bgZoomedCanvas = document.getElementById('bgZoomedCanvas');
+const faviconCanvas = document.getElementById('faviconCanvas');
+const zoomedCanvas = document.getElementById('zoomedCanvas');
 
 
 // Initialize font list
@@ -30,7 +16,7 @@ function initFonts() {
         const option = document.createElement('option');
         option.value = font;
         option.text = font;
-        fontSelect.appendChild(option);
+        form.elements['fontSelect'].appendChild(option);
     });
 }
 
@@ -59,36 +45,37 @@ function initUnicodeRanges() {
         const option = document.createElement('option');
         option.value = i;
         option.text = range.name;
-        unicodeRangeSelect.appendChild(option);
+        form.elements['unicodeRangeSelect'].appendChild(option);
     }
 }
 
-function appendCharToSelect(select, character, text = '') {
-    const option = document.createElement('option');
-    option.value = character;
-    option.text = character;
+function addRadioButton(container, character, text = '') {
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'unicodeRadio';
+    radio.value = character;
+
+    const label = document.createElement('label');
+    label.textContent = character;
     if (text)
-        option.text = option.text+' '+text;
-    select.appendChild(option);
+        label.title = text;
+
+    label.appendChild(radio);
+
+    container.appendChild(label);
 }
 
 // Fill Unicode characters list
-function populateUnicodeSelect(range) {
-
-    // First option is empty
-    const emptyOption = document.createElement('option');
-    unicodeSelect.appendChild(emptyOption);
-
+function populateUnicodeRadios(range) {
     if (range.hasOwnProperty('list')) {
         for (let item of range.list) {
             const character = item.codes.map(code => String.fromCodePoint(code)).join('');
-            // console.log(item.codes, character);
-            appendCharToSelect(unicodeSelect, character, item.text);
+            addRadioButton(unicodeRadioButtons, character, item.text);
         }
     } else {
         for (let value = range.from; value <= range.to; value++) {
             const character = String.fromCodePoint(value);
-            appendCharToSelect(unicodeSelect, character);
+            addRadioButton(unicodeRadioButtons, character, value);
         }
     }
 }
@@ -96,16 +83,13 @@ function populateUnicodeSelect(range) {
 // Detect Unicode range choice
 function applySelectedUnicodeRange(event) {
     // Reset the characters list
-    // unicodeSelect.options.length = 0;
-    unicodeSelect.innerHTML = '';
+    unicodeRadioButtons.innerHTML = '';
 
     const i = event.target.value;
     if (i !== '') {
         const range = availableUnicodeRanges[i];
-        populateUnicodeSelect(range);
+        populateUnicodeRadios(range);
     }
-    
-    unicodeSelect.dispatchEvent(new Event('change'));
 }
 
 // Draw the favicon
@@ -116,13 +100,13 @@ function drawFavicon() {
     faviconCtx.clearRect(0, 0, faviconCanvas.width, faviconCanvas.height);
 
     // Apply background color
-    faviconCtx.globalAlpha = opacityRange.value / 100;
-    faviconCtx.fillStyle = bgColorInput.value;
+    faviconCtx.globalAlpha = form.elements['opacityRange'].value / 100;
+    faviconCtx.fillStyle = form.elements['bgColor'].value;
     faviconCtx.fillRect(0, 0, faviconCanvas.width, faviconCanvas.height);
 
     // Appliquer une ombre radiale
-    const shadowStrength = shadowRange.value / 100;
-    const shadowColor = shadowColorInput.value;
+    const shadowStrength = form.elements['shadowRange'].value / 100;
+    const shadowColor = form.elements['shadowColor'].value;
 
     const radius = faviconCanvas.width / 2;
     const gradient = faviconCtx.createRadialGradient(radius, radius, 0, radius, radius, radius * 1.5);
@@ -135,18 +119,19 @@ function drawFavicon() {
 
     // Configure text
     faviconCtx.globalAlpha = 1;
-    const textColor = textColorInput.value;
-    const text = unicodeSelect.value ? unicodeSelect.value : textInput.value;
-    const font = unicodeSelect.value ? 'sans-serif' : fontSelect.value;
-    const fontSize = parseInt(fontSizeInput.value, 10);
-    const offsetX = parseInt(offsetXInput.value, 10);
-    const offsetY = parseInt(offsetYInput.value, 10);
+    const textColor = form.elements['textColor'].value;
+    const unicodeChar = form.elements['unicodeRadio'] ? form.elements['unicodeRadio'].value : null;
+    const text = unicodeChar ?? form.elements['textInput'].value;
+    const font = unicodeChar ? 'sans-serif' : form.elements['fontSelect'].value;
+    const fontSize = parseInt(form.elements['fontSize'].value, 10);
+    const offsetX = parseInt(form.elements['offsetX'].value, 10);
+    const offsetY = parseInt(form.elements['offsetY'].value, 10);
     
     // Apply font style options
     let fontStyle = '';
-    if (!unicodeSelect.value) {
-        if (boldBox.checked) fontStyle += 'bold ';
-        if (italicBox.checked) fontStyle += 'italic ';
+    if (!unicodeChar) {
+        if (form.elements['boldBox'].checked) fontStyle += 'bold ';
+        if (form.elements['italicBox'].checked) fontStyle += 'italic ';
     }
 
     faviconCtx.font = `${fontStyle} ${fontSize}px ${font}`;
@@ -174,7 +159,6 @@ function updatePageFavicon() {
 }
 
 function refresh() {
-    unicodeIcon.value = unicodeSelect.value;
     drawFavicon();
     drawZoomedFavicon();
     updatePageFavicon();
@@ -183,26 +167,17 @@ function refresh() {
 // Initialize events
 function setupEventListeners() {
     // Update drawings in real time
-    bgColorInput.addEventListener('input', refresh);
-    textColorInput.addEventListener('input', refresh);
-    textInput.addEventListener('input', refresh);
-    fontSizeInput.addEventListener('input', refresh);
-    fontSelect.addEventListener('change', refresh);
-    offsetXInput.addEventListener('input', refresh);
-    offsetYInput.addEventListener('input', refresh);
-    unicodeSelect.addEventListener('change', refresh);
-    boldBox.addEventListener('change', refresh);
-    italicBox.addEventListener('change', refresh);
-    opacityRange.addEventListener('input', refresh);
-    shadowRange.addEventListener('input', refresh);
-    shadowColorInput.addEventListener('input', refresh);
+    form.addEventListener('change', refresh);
 
+    form.elements['textInput'].addEventListener('input', refresh);
+    form.elements['opacityRange'].addEventListener('input', refresh);
+    form.elements['shadowRange'].addEventListener('input', refresh);
 
     // Update list of Emojis
-    unicodeRangeSelect.addEventListener('change', applySelectedUnicodeRange);
+    form.elements['unicodeRangeSelect'].addEventListener('change', applySelectedUnicodeRange);
 
     // Download image
-    downloadBtn.addEventListener('click', downloadFavicon);
+    document.getElementById('downloadBtn').addEventListener('click', downloadFavicon);
 }
 
 // Download favicon in PNG format

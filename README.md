@@ -19,10 +19,9 @@ Demo:
     - style (bold/italic)
     - unicode icon
         - manually via text
-        - from a list (configurable)
+        - from lists (configurable)
     - placement offset
 
 ## Future
 A small, non-exhaustive and non-binding list of features to add:
 - background : other shadow geometries (linear, etc.)
-- unicode selection: replace dropdown list with a more user friendly list.

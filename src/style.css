@@ -4,6 +4,7 @@ div {
 }
 div, label {
     display: flex;
+    flex-wrap: wrap;
     flex-direction:row;
     align-items: center;
     gap: .5em;
@@ -12,12 +13,21 @@ input:not([type=checkbox], [type=range]) { width: 4em; text-align: center;  }
 input:not([type=checkbox], [type=range]), select { height: 20px; }
 input[type=range] { margin-right: 1em; }
 input[type='color'] { vertical-align: middle; height: 14px; box-sizing: content-box; }
-canvas { border: 1em solid gray; position: absolute; }
-#unicodeSelect { text-align: center; }
-#unicodeSelect option { font-size: 1.5em; }
-#unicodeSelect, #unicodeSelect option, #unicodeSelect optgroup {
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+label:has(input[type=radio]), label:has(input[type=checkbox]) {
+    border: 1px solid #888;
+    border-radius: .3em;
+    background-color: #eee;
+    padding: .1em .4em;
 }
+label:has(input[type=radio]):hover, label:has(input[type=checkbox]):hover {
+    background-color: #ccc;
+}
+label:has(input[type=radio]:checked), label:has(input[type=checkbox]:checked) {
+    background-color: #f7df1e;
+}
+label > input[type=radio] { display: none; }
+canvas { border: 1em solid gray; position: absolute; }
+.unicodeChar { font-size: 1.5em; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
 h2 { margin-bottom: .5em;}
 #canvasContainer {
     margin: 0;
